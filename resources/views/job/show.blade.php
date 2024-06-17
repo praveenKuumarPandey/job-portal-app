@@ -4,7 +4,7 @@
 
     <x-job-card :job="$job">
         <p>{!! nl2br(e($job->description)) !!}</p>
-
+        @auth
         @can('apply', $job)
         <div class="my-2">
             <x-link-button :href="route('job.application.create', $job)">
@@ -15,6 +15,11 @@
         <div class="text-center text-sm font-medium text-slate-500 my-2"> You have already Applied!
         </div>
         @endcan
+        @else
+        <div class="text-center text-sm font-medium text-slate-500 my-2">
+            Login to Apply <a class="text-indigo-400 hover:underline" href="{{route('auth.create')}}">click here</a>
+        </div>
+        @endauth
     </x-job-card>
 
     <x-card class="mb-4">

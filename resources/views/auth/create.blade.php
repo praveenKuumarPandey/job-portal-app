@@ -22,7 +22,10 @@
                         <label for="remember"> Remember me</label>
                     </div>
                 </div>
-                <div><a href="#" class="text-indigo-600 hover:underline">Forget Password?</a></div>
+                {{-- <div><a href="#" class="text-indigo-600 hover:underline">Forget Password?</a></div> --}}
+                <div> Don't have Accout? <a href="{{ route('auth.register')}}" class="text-indigo-600 hover:underline">
+                        Register here</a></div>
+
             </div>
 
             <x-button class="w-full bg-green-100"> Login</x-button>

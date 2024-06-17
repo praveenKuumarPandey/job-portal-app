@@ -28,6 +28,9 @@ Route::resource('auth', AuthController::class)->only(['create', 'store']);
 Route::get('logout', fn() => to_route('auth.destroy'))->name('logout');
 Route::delete('auth', [AuthController::class, 'destroy'])->name('auth.destroy');
 
+Route::get('auth/register', [AuthController::class, 'register'])->name('auth.register');
+Route::post('auth/save-user', [AuthController::class, 'saveUser'])->name('auth.save-user');
+
 
 Route::middleware('auth')->group(function () {
     Route::resource('job.application', JobApplicationController::class)->only(['create', 'store']);
