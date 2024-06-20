@@ -6,18 +6,24 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-
-class JobApplication extends Model
+class JobSeeker extends Model
 {
     use HasFactory;
-    protected $fillable = ['expected_salary', 'user_id', 'job_id', 'cv_path', 'status'];
-    public function job(): BelongsTo
-    {
-        return $this->belongsTo(Job::class);
-    }
 
+    protected $fillable = [
+        'phone',
+        'address',
+        'education_details',
+        'user_id'
+    ];
+
+    public function skills()
+    {
+        return $this->belongsToMany(Skill::class, 'job_seeker_skills');
+    }
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
+
 }

@@ -51,6 +51,15 @@ class JobController extends Controller
     public function show(Job $job)
     {
         $this->authorize('view', $job);
+
+        $jobWSkills = $job->with('skills');
+        $jobSeeker = auth()->user()->jobSeeker;
+
+        $jobSeekerSkills = $jobSeeker->skills->puck('id')->toArray();
+        $missingSkills = $job->skills->whereNotIn('id', $jobSeekerSkills);
+
+        // $recommendedCourses = Course::whereHas('skills',);
+
         return view('job.show', ["job" => $job->load('employer.jobs')]);
     }
 

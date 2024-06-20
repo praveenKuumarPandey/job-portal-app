@@ -22,7 +22,23 @@
                     number_format($application->job->job_applications_avg_expected_salary) }}
                 </div>
             </div>
+
+
             <div>
+
+                @if ($application->status == 'accept')
+                <div>
+                    Accepted
+                </div>
+                @elseif($application->status == 'reject')
+                <div>
+                    Reject
+                </div>
+                @elseif($application->status == 'under_review')
+                <div>
+                    Under Review
+                </div>
+                @else
                 <form action="{{ route('my-job-applications.destroy', ['my_job_application' => $application] )}}"
                     method="post">
                     @csrf
@@ -30,6 +46,7 @@
                     <x-button>Cancel</x-button>
 
                 </form>
+                @endif
             </div>
         </div>
 

@@ -32,7 +32,10 @@ class EmployerPolicy
     public function create(User $user): bool
     {
         // user->employer will load employer details with user relationship
-        return null === $user->employer;
+        // return null === $user->employer;
+
+        // making employer registration open
+        return true;
     }
 
     /**

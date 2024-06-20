@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Skill;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -51,17 +52,24 @@ class AuthController extends Controller
 
     public function register()
     {
-        return view('auth.register');
+
+        $skills = Skill::all();
+        return view('auth.register', ['skills' => $skills]);
     }
 
     public function saveUser(Request $request)
     {
 
+        // dd($request);
 
         $validatedData = $request->validate([
             'name' => 'required|string|min: 3|max: 255',
             'email' => 'required|email',
             'password' => 'required',
+            'skills' => 'required|array',
+            'phone' => 'required|regex:/^[0-9]{10}$/',
+            'address' => 'nullable|string| max: 500',
+            'education_details' => 'nullable|string| max: 500',
         ]);
 
         // dd($request, $validatedData);
@@ -75,8 +83,25 @@ class AuthController extends Controller
         // dd($request, $validatedData, $userdata);
 
         $result = User::create($userdata);
+
+        // dd("user created", $result);
+
+
         if ($result) {
-            return redirect('/auth/create')->with('success', 'Successfully registered');
+            $jobseekerCreateResult = $result->jobSeeker()->create([
+                'phone' => $validatedData['phone'],
+                'address' => $validatedData['address'],
+                'education_details' => $validatedData['education_details'],
+            ]);
+            // dd("jobseeker created", $jobseekerCreateResult);
+            if ($jobseekerCreateResult) {
+
+                $skillAttached = $jobseekerCreateResult->skills()->attach($validatedData['skills']);
+                return redirect('/auth/create')->with('success', 'Successfully registered');
+            } else {
+                return redirect()->back()->with('error', 'Some thing Went Wrong, Please Try Again');
+            }
+
         } else {
             return redirect()->back()->with('error', 'Invalid credentials');
         }
@@ -84,6 +109,59 @@ class AuthController extends Controller
 
     }
 
+    public function employerRegister()
+    {
+
+
+        return view('auth.employer-register');
+    }
+
+
+    public function saveEmployer(Request $request)
+    {
+
+        // dd($request);
+
+        $validatedData = $request->validate([
+            'name' => 'required|string|min: 3|max: 255',
+            'email' => 'required|email',
+            'password' => 'required',
+            'company_name' => 'required',
+
+        ]);
+
+        // dd($request, $validatedData);
+        $userdata = [...$validatedData, 'email_verified' => Carbon::now(), 'password' => Hash::make($request->password)];
+
+        // $userdata = new User();
+        // $userdata->name = $request->name;
+        // $userdata->email = $request->email;
+        // $userdata->password = Hash::make($request->password);
+        // $userdata->save();
+        // dd($request, $validatedData, $userdata);
+
+        $result = User::create($userdata);
+
+        // dd("user created", $result);
+
+
+        if ($result) {
+            $employerCreateResult = $result->employer()->create([
+                'company_name' => $validatedData['company_name'],
+            ]);
+            // dd("jobseeker created", $jobseekerCreateResult);
+            if ($employerCreateResult) {
+                return redirect('/auth/create')->with('success', 'Successfully registered');
+            } else {
+                return redirect()->back()->with('error', 'Some thing Went Wrong, Please Try Again');
+            }
+
+        } else {
+            return redirect()->back()->with('error', 'Invalid credentials');
+        }
+
+
+    }
 
     public function destroy()
     {

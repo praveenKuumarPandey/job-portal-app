@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Job;
+use App\Models\JobApplication;
 use Illuminate\Http\Request;
 
 class JobApplicationController extends Controller
@@ -48,9 +49,14 @@ class JobApplicationController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Job $job, JobApplication $application)
     {
-        //
+
+
+        $application->update([
+            'status' => 'under_review',
+        ]);
+        return view('job_application.show', ['job' => $job, 'jobApplication' => $application]);
     }
 
     /**
@@ -75,5 +81,21 @@ class JobApplicationController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    public function updateState(Request $request, Job $job, JobApplication $application)
+    {
+        $validatedData = $request->validate([
+            'status' => 'required|in:accept,reject,under_review',
+            // Add other query parameters you want to validate
+        ]);
+
+
+        // dd($validatedData, $application, $request);
+
+        $application->update([
+            'status' => $validatedData['status']
+        ]);
+        return redirect()->back()->with("success", "Job Application updated");
     }
 }

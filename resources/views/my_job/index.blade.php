@@ -17,9 +17,9 @@
                     <div>
                         Applied {{ $application->created_at->diffForHumans()}}
                     </div>
-                    <div>
+                    {{-- <div>
                         Download CV
-                    </div>
+                    </div> --}}
                 </div>
                 <div>
                     <x-rupee-symbol /> {{ number_format($application->expected_salary) }}
@@ -33,6 +33,8 @@
             @endforelse
 
             <div class="flex space-x-2">
+                <x-link-button href="{{ route('my-jobs.show', $job) }}">Show</x-link-button>
+
                 <x-link-button href="{{ route('my-jobs.edit', $job) }}">Edit</x-link-button>
 
                 <form action="{{ route('my-jobs.destroy', $job)}}" method="post">

@@ -26,6 +26,7 @@ class JobRequest extends FormRequest
             'location' => 'required|string|max: 255',
             'salary' => 'required|numeric|min: 1|max: 100000000',
             'description' => 'required|string|max: 255',
+            'skills' => 'required|array',
             'experience' => 'required|in:' . implode(',', \App\Models\Job::$experience),
             'category' => 'required|in:' . implode(',', \App\Models\Job::$category),
 

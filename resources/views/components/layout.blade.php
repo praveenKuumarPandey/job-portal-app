@@ -835,21 +835,42 @@
 <body
     class="mx-auto mt-10 max-w-2xl bg-gradient-to-r from-indigo-100 from-10% via-sky-100 via-25% to-emerald-200 to-80% text-slate-700">
     <nav class="mb-8 flex justify-between text-lg font-medium">
-        <ul class="flex space-x-2">
+        <ul class="flex space-x-3 ">
             <li>
                 <a href="{{route('jobs.index')}}"> Home</a>
             </li>
         </ul>
-        <ul class="flex space-x-2">
+        <ul class="flex space-x-3 text-center  font-medium">
             @auth
-            <li>
+
+            @if(auth()->user()->jobseeker)
+            <li class="">
                 <a href="{{ route('my-job-applications.index') }}">
                     {{auth()->user()->name ?? 'Anonymous'}} : Application
                 </a>
             </li>
+            @else
+            <li class="">
+                <a href="#">
+                    {{auth()->user()->name ?? 'Anonymous'}} </a>
+            </li>
+            @endif
+            @if (auth()->check() && auth()->user()->jobseeker)
+            <li>
+                <a href="{{ route('job-seeker.recomendedjob') }}">
+                    Recommended Jobs
+                </a>
+            </li>
+            @endif
+
+            @if (auth()->check() && auth()->user()->employer)
             <li>
                 <a href="{{ route('my-jobs.index')}}">My Jobs</a>
             </li>
+            <li>
+                <a href="{{ route('employer.suggestedCandidates')}}">Suggested Candidates</a>
+            </li>
+            @endif
             <li>
                 <form action="{{route('auth.destroy')}}" method="post">
                     @csrf

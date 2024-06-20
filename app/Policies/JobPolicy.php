@@ -45,9 +45,9 @@ class JobPolicy
         if ($user->employer->user_id !== $job->employer->user_id) {
             return false;
         }
-        if ($job->jobApplications()->count() > 0) {
-            return Response::deny('Cannot change the job with more than one applications.');
-        }
+        // if ($job->jobApplications()->count() > 0) {
+        //     return Response::deny('Cannot change the job with more than one applications.');
+        // }
 
         return true;
     }

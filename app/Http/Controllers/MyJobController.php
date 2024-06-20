@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\JobRequest;
 use App\Models\Job;
+use App\Models\Skill;
 use Illuminate\Http\Request;
 
 class MyJobController extends Controller
@@ -32,7 +33,8 @@ class MyJobController extends Controller
     public function create()
     {
         $this->authorize('create', Job::class);
-        return view('my_job.create');
+        $skills = Skill::all();
+        return view('my_job.create', ['skills' => $skills]);
     }
 
     /**
@@ -40,16 +42,25 @@ class MyJobController extends Controller
      */
     public function store(JobRequest $request)
     {
-        auth()->user()->employer->jobs()->create($request->validated());
+
+        // dd($request);
+        // dd($request->validated());
+
+        $validatedData = $request->validated();
+        $jobCreated = auth()->user()->employer->jobs()->create($validatedData);
+
+        $jobCreated->skills()->attach($validatedData['skills']);
+
         return redirect()->route('my-jobs.index')->with('success', 'Job created successfully');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Job $myJob)
     {
-        //
+        // dd($myJob);
+        return view('my_job.show', ['job' => $myJob]);
     }
 
     /**
@@ -59,7 +70,8 @@ class MyJobController extends Controller
     {
 
         $this->authorize('update', $myJob);
-        return view('my_job.edit', ['job' => $myJob]);
+        $skills = Skill::all();
+        return view('my_job.edit', ['job' => $myJob, 'skills' => $skills]);
     }
 
     /**
@@ -68,9 +80,17 @@ class MyJobController extends Controller
     public function update(JobRequest $request, Job $myJob)
     {
 
+
         // dd($request, $myJob);
+
+        $validatedData = $request->validated();
         $this->authorize('update', $myJob);
-        $myJob->update($request->validated());
+        $myjobupdate = $myJob->update($validatedData);
+
+        if ($myjobupdate) {
+            $myJob->skills()->attach($validatedData['skills']);
+        }
+
 
         return redirect()->route('my-jobs.index')->with('success', 'Job updated successfully.');
     }

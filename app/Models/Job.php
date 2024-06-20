@@ -31,6 +31,12 @@ class Job extends Model
         return $this->hasMany(JobApplication::class);
     }
 
+    public function skills()
+    {
+        return $this->belongsToMany(Skill::class, 'job_skills')->withTimestamps();
+    }
+
+
     public function hasUserApplied(Authenticatable|User|int $user): bool
     {
         return $this->where('id', $this->id)->whereHas('jobApplications', fn($query) => $query->where('user_id', '=', $user->id ?? $user))->exists();

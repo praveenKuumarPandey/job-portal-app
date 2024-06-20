@@ -28,6 +28,11 @@
                     <x-text-input name="description" type="textarea" placeholder="Enter Job Description" />
                 </div>
 
+                <div class="col-span-2">
+                    <x-label for="skills" :required="true"> Required Skill</x-label>
+                    <x-drop-down-component name="skills" ddtype="multiple" size='3' :optionList="$skills" />
+                </div>
+
                 <div>
                     <x-label for="experience" :required="true"> Experience</x-label>
                     <x-radio-list-group
