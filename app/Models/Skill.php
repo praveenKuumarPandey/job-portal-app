@@ -21,4 +21,9 @@ class Skill extends Model
         return $this->belongsToMany(Job::class, 'job_skills')->withTimestamps();
     }
 
+    public function course()
+    {
+        return $this->belongsToMany(Course::class, 'course_skill')->withTimestamps();
+    }
+
 }

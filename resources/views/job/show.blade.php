@@ -23,12 +23,50 @@
     </x-job-card>
 
     <x-card class="mb-4">
+        <h2 class="mb-4 text-lg font-medium"> Recomended Course to Brige the Gap</h2>
+
+        <div class="text-sm text-slate-500">
+            @foreach ($recommendedCourses as $course)
+            <div class="mb-4 flex justify-between text-sm font-medium text-slate-500">
+                <div>
+                    <div class="text-slate-700"><a href="{{ route('jobs.show', $course)}}">{{ $course->course_name
+                            }}</a>
+                    </div>
+                    <div class="text-xs">
+                        {{ $course->created_at && $course->created_at->diffForHumans() }}
+                    </div>
+                    <div class="text-xs">
+                        Covers {{ $course->missing_skills_count }} missing skills
+                    </div>
+                    <div class="text-xs flex space-x-2">
+                        @foreach($course->missing_skills as $skill)
+                        <div>{{ $skill->skill_name}}</div>
+                        @endforeach
+                    </div>
+                </div>
+                <div>
+                    <div class="text-xs">
+                        {{ $course->educationalInstitution->name }}
+                    </div>
+
+                </div>
+            </div>
+
+
+            @endforeach
+        </div>
+    </x-card>
+
+
+
+    <x-card class="mb-4">
         <h2 class="mb-4 text-lg font-medium">
             More {{ $job->employer->company_name }} Jobs
         </h2>
         <div class="text-sm text-slate-500">
 
             @foreach ($job->employer->jobs as $emplrJob)
+            @if($job->id !== $emplrJob->id)
             <div class="mb-4 flex justify-between">
                 <div>
                     <div class="text-slate-700"><a href="{{ route('jobs.show', $emplrJob)}}">{{ $emplrJob->title }}</a>
@@ -38,10 +76,10 @@
                     </div>
                 </div>
                 <div class="text-xs">
-                    ${{ number_format($emplrJob->salary) }}
+                    <x-rupee-symbol>{{ number_format($emplrJob->salary) }} </x-rupee-symbol>
                 </div>
             </div>
-
+            @endif
 
             @endforeach
         </div>

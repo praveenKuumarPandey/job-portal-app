@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Course;
 use App\Models\Job;
 use Illuminate\Http\Request;
 
@@ -51,16 +52,32 @@ class JobController extends Controller
     public function show(Job $job)
     {
         $this->authorize('view', $job);
-
+        $recommendedCourses = [];
         $jobWSkills = $job->with('skills');
         $jobSeeker = auth()->user()->jobSeeker;
+        if ($jobSeeker) {
 
-        $jobSeekerSkills = $jobSeeker->skills->puck('id')->toArray();
-        $missingSkills = $job->skills->whereNotIn('id', $jobSeekerSkills);
 
-        // $recommendedCourses = Course::whereHas('skills',);
+            $jobSeekerSkills = $jobSeeker->skills->pluck('id')->toArray();
+            $missingSkills = $job->skills->whereNotIn('id', $jobSeekerSkills);
 
-        return view('job.show', ["job" => $job->load('employer.jobs')]);
+            $recommendedCourses = Course::whereHas('skills', function ($query) use ($missingSkills) {
+                $query->whereIn('skills.id', $missingSkills->pluck('id'));
+            })->get();
+
+
+            $recommendedCourses->each(function ($course) use ($missingSkills) {
+                $course->missing_skills = $course->skills->intersect($missingSkills);
+                $course->missing_skills_count = $course->missing_skills->count();
+            });
+
+            $recommendedCourses = $recommendedCourses->sortByDesc('missing_skills_count');
+
+        }
+
+
+        // dd("recomended courses 2 ", $recommendedCourses, "Missing Skill", $missingSkills, "job sekker skill", $jobSeeker->skills, "JOb skills", $job->skills, "JOb seeker ", $jobSeeker, "Job ", $job);
+        return view('job.show', ["job" => $job->load('employer.jobs'), "recommendedCourses" => $recommendedCourses]);
     }
 
     /**

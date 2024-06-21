@@ -14,6 +14,7 @@ return new class extends Migration {
             $table->id();
             $table->string('course_name');
             $table->string('course_description');
+            $table->foreignIdFor(\App\Models\EducationalInstitution::class)->nullable()->constrained();
             $table->timestamps();
         });
     }
