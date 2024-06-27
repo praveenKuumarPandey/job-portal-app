@@ -53,9 +53,9 @@ class JobApplicationController extends Controller
     {
 
 
-        $application->update([
-            'status' => 'under_review',
-        ]);
+        // $application->update([
+        //     'status' => 'under_review',
+        // ]);
         return view('job_application.show', ['job' => $job, 'jobApplication' => $application]);
     }
 
@@ -93,9 +93,12 @@ class JobApplicationController extends Controller
 
         // dd($validatedData, $application, $request);
 
-        $application->update([
+        $resultUpdate = $application->update([
             'status' => $validatedData['status']
         ]);
+
+        // dd($application, $resultUpdate);
+
         return redirect()->back()->with("success", "Job Application updated");
     }
 }

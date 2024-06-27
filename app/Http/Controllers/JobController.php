@@ -54,7 +54,8 @@ class JobController extends Controller
         $this->authorize('view', $job);
         $recommendedCourses = [];
         $jobWSkills = $job->with('skills');
-        $jobSeeker = auth()->user()->jobSeeker;
+
+        $jobSeeker = auth()->user()->jobSeeker ?? null;
         if ($jobSeeker) {
 
 
