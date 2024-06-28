@@ -14,6 +14,7 @@ class DropDownComponent extends Component
     public function __construct(
         public ?string $name = null,
         public ?object $optionList = null,
+        public ?object $alreadySlectedOptionList = null,
         public ?string $ddtype = "",
         public ?string $size = "",
 

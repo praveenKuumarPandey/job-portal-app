@@ -39,8 +39,9 @@
                 @foreach ($recommendedCourses as $course)
                     <div class="mb-4 flex justify-between text-sm font-medium text-slate-500">
                         <div>
-                            <div class="text-slate-700"><a
-                                    href="{{ route('jobs.show', $course) }}">{{ $course->course_name }}</a>
+                            <div class="text-slate-700">
+                                {{-- {{ route('jobs.show', $course) }} --}}
+                                <a href="#">{{ $course->course_name }}</a>
                             </div>
                             <div class="text-xs">
                                 {{ $course->created_at && $course->created_at->diffForHumans() }}

@@ -27,7 +27,7 @@ class JobApplicationController extends Controller
         $this->authorize('apply', $job);
 
         $validatedData = $request->validate([
-            'expected_salary' => 'required|min:1|max:1000000',
+            'expected_salary' => 'required|numeric|min:1|max:10000000',
             'cv' => 'required|file|mimes:pdf|max:2048'
         ]);
 

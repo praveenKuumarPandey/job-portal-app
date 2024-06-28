@@ -21,7 +21,7 @@ class MyJobController extends Controller
             [
                 'jobs' => auth()->user()->employer->jobs()
                     ->with(['employer', 'jobApplications', 'jobApplications.user'])
-                    ->withTrashed()
+                    // ->withTrashed()
                     ->get()
             ]
         );
@@ -88,7 +88,7 @@ class MyJobController extends Controller
         $myjobupdate = $myJob->update($validatedData);
 
         if ($myjobupdate) {
-            $myJob->skills()->attach($validatedData['skills']);
+            $myJob->skills()->sync($validatedData['skills']);
         }
 
 

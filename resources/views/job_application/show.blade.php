@@ -18,7 +18,7 @@
                 <div class="flex space-x-2 items-center ">
                     Expected Salary &#x20b9 {{ number_format($jobApplication->expected_salary) }}
                 </div>
-                <div>
+                <div hidden>
                     Average asking salary &#x20b9
                     {{ number_format($jobApplication->job->job_applications_avg_expected_salary) }}
                 </div>
